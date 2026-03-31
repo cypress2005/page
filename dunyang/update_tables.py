@@ -12,15 +12,24 @@ except ImportError:
 def update_html():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # 尋找最新的 Excel 檔案
-    building_files = glob.glob(os.path.join(base_dir, "file", "*建物選配表*.xlsx"))
-    parking_files = glob.glob(os.path.join(base_dir, "file", "*車位選配表*.xlsx"))
-    
-    excel_building = building_files[0] if building_files else None
-    excel_parking = parking_files[0] if parking_files else None
+    def get_latest_file(pattern1, pattern2):
+        files = glob.glob(pattern1) + glob.glob(pattern2)
+        if not files:
+            return None
+        return max(files, key=os.path.getmtime)
 
-    if not excel_building or not excel_parking:
-        print("錯誤：在 file 資料夾中找不到建物選配表或車位選配表！請確認檔名包含這些字眼。")
+    # 尋找最新的 Excel 或 PDF 檔案
+    file_building = get_latest_file(
+        os.path.join(base_dir, "file", "*建物選配表*.xlsx"),
+        os.path.join(base_dir, "file", "*建物選配表*.pdf")
+    )
+    file_parking = get_latest_file(
+        os.path.join(base_dir, "file", "*車位選配表*.xlsx"),
+        os.path.join(base_dir, "file", "*車位選配表*.pdf")
+    )
+
+    if not file_building or not file_parking:
+        print("錯誤：在 file 資料夾中找不到建物選配表或車位選配表 (Excel或PDF)！請確認檔名包含這些字眼。")
         return
 
     target_building_html = os.path.join(base_dir, "choose_building.html")
@@ -57,13 +66,29 @@ def update_html():
                     cell.decompose()
         return table
 
-    print(f"正在讀取建物資料: {os.path.basename(excel_building)} ...")
-    b_table = get_table_html(excel_building)
-    b_table = clean_table(b_table, "I")
+    def get_content_element(file_path, last_main_col_letter):
+        if not file_path:
+            return None
+        ext = os.path.splitext(file_path)[1].lower()
+        if ext == '.xlsx':
+            table = get_table_html(file_path)
+            return clean_table(table, last_main_col_letter)
+        elif ext == '.pdf':
+            filename = os.path.basename(file_path)
+            soup = BeautifulSoup("", "html.parser")
+            iframe = soup.new_tag("iframe")
+            iframe['src'] = f"file/{filename}"
+            iframe['width'] = "100%"
+            iframe['height'] = "1200px"
+            iframe['style'] = "border: none; max-width: 100%; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+            return iframe
+        return None
+
+    print(f"正在處理建物資料: {os.path.basename(file_building)} ...")
+    b_table = get_content_element(file_building, "I")
     
-    print(f"正在讀取車位資料: {os.path.basename(excel_parking)} ...")
-    p_table = get_table_html(excel_parking)
-    p_table = clean_table(p_table, "H")
+    print(f"正在處理車位資料: {os.path.basename(file_parking)} ...")
+    p_table = get_content_element(file_parking, "H")
 
     print(f"正在更新網頁檔: choose_building.html ...")
     with open(target_building_html, "r", encoding="utf-8") as f:
