@@ -1,6 +1,7 @@
 import os
 import io
 import glob
+import time
 try:
     from xlsx2html import xlsx2html
     from bs4 import BeautifulSoup
@@ -92,7 +93,8 @@ def update_html():
             image.save(img_path)
             
             img_tag = soup.new_tag("img")
-            img_tag['src'] = f"file/{img_filename}"
+            timestamp = int(time.time())
+            img_tag['src'] = f"file/{img_filename}?v={timestamp}"
             img_tag['style'] = "max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
             wrapper.append(img_tag)
             
@@ -103,7 +105,8 @@ def update_html():
         soup = BeautifulSoup("", "html.parser")
         wrapper = soup.new_tag("div", style="display: flex; justify-content: center;")
         img_tag = soup.new_tag("img")
-        img_tag['src'] = f"file/{filename}"
+        timestamp = int(time.time())
+        img_tag['src'] = f"file/{filename}?v={timestamp}"
         img_tag['style'] = "max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
         wrapper.append(img_tag)
         return wrapper
