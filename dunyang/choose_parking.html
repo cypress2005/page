@@ -161,5 +161,17 @@
 <p>本表僅供參考，實際選配結果將以書面通知為準。</p>
 </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var images = document.querySelectorAll('.img-container img');
+        images.forEach(function(img) {
+            var currentSrc = img.getAttribute('src');
+            if(currentSrc) {
+                var cleanSrc = currentSrc.split('?')[0];
+                img.setAttribute('src', cleanSrc + '?v=' + new Date().getTime());
+            }
+        });
+    });
+</script>
 </body>
 </html>
