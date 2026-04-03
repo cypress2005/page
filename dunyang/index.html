@@ -211,7 +211,29 @@
                 中華民國115年03月11日</p>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var cacheBuster = '?v=' + new Date().getTime();
+            
+            var images = document.querySelectorAll('img');
+            images.forEach(function(img) {
+                var currentSrc = img.getAttribute('src');
+                if(currentSrc) {
+                    var cleanSrc = currentSrc.split('?')[0];
+                    img.setAttribute('src', cleanSrc + cacheBuster);
+                }
+            });
 
+            var links = document.querySelectorAll('a.download-btn');
+            links.forEach(function(link) {
+                var currentHref = link.getAttribute('href');
+                if(currentHref && currentHref.indexOf('.pdf') !== -1) {
+                    var cleanHref = currentHref.split('?')[0];
+                    link.setAttribute('href', cleanHref + cacheBuster);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
