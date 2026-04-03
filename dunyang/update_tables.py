@@ -25,22 +25,22 @@ def update_html():
 
     # 尋找最新的 Excel, PDF, 或是圖檔
     file_building = get_latest_file(
-        os.path.join(base_dir, "file", "*建物選配表*.xlsx"),
-        os.path.join(base_dir, "file", "*建物選配表*.pdf"),
-        os.path.join(base_dir, "file", "*建物選配表*.png"),
-        os.path.join(base_dir, "file", "*建物選配表*.jpg"),
-        os.path.join(base_dir, "file", "*建物選配表*.jpeg")
+        os.path.join(base_dir, "file", "*building_selection*.xlsx"),
+        os.path.join(base_dir, "file", "*building_selection*.pdf"),
+        os.path.join(base_dir, "file", "*building_selection*.png"),
+        os.path.join(base_dir, "file", "*building_selection*.jpg"),
+        os.path.join(base_dir, "file", "*building_selection*.jpeg")
     )
     file_parking = get_latest_file(
-        os.path.join(base_dir, "file", "*車位選配表*.xlsx"),
-        os.path.join(base_dir, "file", "*車位選配表*.pdf"),
-        os.path.join(base_dir, "file", "*車位選配表*.png"),
-        os.path.join(base_dir, "file", "*車位選配表*.jpg"),
-        os.path.join(base_dir, "file", "*車位選配表*.jpeg")
+        os.path.join(base_dir, "file", "*parking_selection*.xlsx"),
+        os.path.join(base_dir, "file", "*parking_selection*.pdf"),
+        os.path.join(base_dir, "file", "*parking_selection*.png"),
+        os.path.join(base_dir, "file", "*parking_selection*.jpg"),
+        os.path.join(base_dir, "file", "*parking_selection*.jpeg")
     )
 
     if not file_building or not file_parking:
-        print("錯誤：在 file 資料夾中找不到建物選配表或車位選配表 (支援 Excel、PDF 或圖檔)！請確認檔名包含這些字眼。")
+        print("錯誤：在 file 資料夾中找不到 building_selection 或 parking_selection 的檔案 (支援 Excel、PDF 或圖檔)！請確認檔名包含這些字眼。")
         return
 
     target_building_html = os.path.join(base_dir, "choose_building.html")
