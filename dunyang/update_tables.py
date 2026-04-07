@@ -138,6 +138,13 @@ def update_html():
     if b_container and b_table:
         b_container.clear()
         b_container.append(b_table)
+    b_time_h1 = soup_b.find("h1", id="building-update-time")
+    b_time_full_span = soup_b.find("span", id="building-update-time-full")
+    if b_time_h1 and file_building:
+        mtime = os.path.getmtime(file_building)
+        b_time_h1.string = f"更新日期：{time.strftime('%Y/%m/%d', time.localtime(mtime))}"
+        if b_time_full_span:
+            b_time_full_span.string = time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(mtime))
     with open(target_building_html, "w", encoding="utf-8") as f:
         f.write(str(soup_b))
 
@@ -148,6 +155,13 @@ def update_html():
     if p_container and p_table:
         p_container.clear()
         p_container.append(p_table)
+    p_time_h1 = soup_p.find("h1", id="parking-update-time")
+    p_time_full_span = soup_p.find("span", id="parking-update-time-full")
+    if p_time_h1 and file_parking:
+        mtime = os.path.getmtime(file_parking)
+        p_time_h1.string = f"更新日期：{time.strftime('%Y/%m/%d', time.localtime(mtime))}"
+        if p_time_full_span:
+            p_time_full_span.string = time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(mtime))
     with open(target_parking_html, "w", encoding="utf-8") as f:
         f.write(str(soup_p))
         
